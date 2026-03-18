@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShare Connect - Learn. Teach. Connect.</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation with Video Background -->
+    <header class="navbar-section relative sticky top-0 z-50">
+        <!-- Background Video -->
+        <video autoplay muted loop playsinline id="nav-video">
+            <source src="{% static 'videos/bg-video.mp4' %}" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+
+        <!-- Overlay -->
+        <div class="nav-overlay"></div>
+
+        <!-- Navbar Content -->
+        <div class="relative z-10">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2 ">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                        <span class="text-xl font-bold">SkillShare Connect</span>
+                    </div>
+                    <div class="hidden md:flex space-x-8">
+                        <button id="theme-toggle"
+                            class="ml-4 px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                            🌙 Dark
+                        </button>
+                        <a class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+
+                        {% if user.is_authenticated %}
+                            <a class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+                            <a class="nav-item {% if request.resolver_match.url_name == 'matches' %}active{% endif %}" href="{% url 'matches' %}">AI Matches</a>
+                            <a class="nav-item {% if request.resolver_match.url_name == 'search' %}active{% endif %}" href="{% url 'search' %}">Search</a>
+
+                            <!-- ✅ Messages with Badge -->
+                            <div class="relative">
+                                <a class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}" 
+                                href="{% url 'messages' %}">
+                                    Messages
+                                </a>
+                                {% if unread_count > 0 %}
+                                    <span class="absolute -top-2 -right-4 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {{ unread_count }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+
+
+                            <div class="flex items-center space-x-4">
+                                <a href="{% url 'profile' %}" class="flex items-center space-x-2">
+                                    {% if user.avatar %}
+                                        <img src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}" class="w-8 h-8 rounded-full object-cover">
+                                    {% else %}
+                                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                            {{ user.first_name|first }}{{ user.last_name|first }}
+                                        </div>
+                                    {% endif %}
+                                    <span>{{ user.username }}</span>
+                                </a>
+                                <a href="{% url 'logout' %}" class="nav-item">Logout</a>
+                            </div>
+                        {% else %}
+                            <a class="nav-item {% if request.resolver_match.url_name == 'auth' %}active{% endif %}" href="{% url 'auth' %}">Login</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="md:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

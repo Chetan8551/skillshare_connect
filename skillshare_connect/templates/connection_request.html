@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Connection Request Page -->
+<div class="container mx-auto px-6 py-12">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="gradient-bg text-white p-8">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold">
+                        {% if to_user.avatar %}
+                            <img src="{{ to_user.avatar.url }}" alt="{{ to_user.get_full_name }}" class="w-full h-full object-cover rounded-full">
+                        {% else %}
+                            {{ to_user.first_name|first }}{{ to_user.last_name|first }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">Connect with {{ to_user.get_full_name }}</h1>
+                        <p class="text-xl opacity-90">{{ to_user.university }} • {{ to_user.year_of_study }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <!-- Skills Preview -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-3 text-gray-800">Skills</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">
+                                <i class="fas fa-chalkboard-teacher text-green-500 mr-2"></i>Can Teach:
+                            </p>
+                            <div class="flex flex-wrap">
+                                {% for skill in to_user.skills.all %}
+                                    {% if skill.skill_type == 'teach' %}
+                                    <span class="skill-tag">{{ skill.skill.name }}</span>
+                                    {% endif %}
+                                {% empty %}
+                                <span class="text-gray-500">No teaching skills added</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">
+                                <i class="fas fa-graduation-cap text-blue-500 mr-2"></i>Wants to Learn:
+                            </p>
+                            <div class="flex flex-wrap">
+                                {% for skill in to_user.skills.all %}
+                                    {% if skill.skill_type == 'learn' %}
+                                    <span class="skill-tag">{{ skill.skill.name }}</span>
+                                    {% endif %}
+                                {% empty %}
+                                <span class="text-gray-500">No learning goals added</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Request Form -->
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Add a message (optional)</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.message.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transition">
+                            Send Request
+                        </button>
+                        <!-- Change this line -->
+                        <a href="{% url 'profile_view' to_user.id %}" class="flex-1 border-2 border-gray-300 text-gray-700 py-4 rounded-2xl font-semibold text-lg hover:border-gray-400 transition text-center">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Tips -->
+                <div class="mt-8 p-6 bg-blue-50 rounded-2xl">
+                    <h3 class="font-semibold mb-2 flex items-center">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        Connection Tips
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                        <li>Introduce yourself and mention why you'd like to connect</li>
+                        <li>Be specific about what you'd like to learn or teach</li>
+                        <li>Suggest a time for your first session if you have one in mind</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

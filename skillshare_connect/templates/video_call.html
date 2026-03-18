@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Video Call Page -->
+<div class="container mx-auto px-6 py-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Video Call with {{ other_user.get_full_name }}</h1>
+                <p class="text-gray-600">Share this room ID with your partner: <code class="bg-gray-100 px-2 py-1 rounded">{{ room_id }}</code></p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Local Video -->
+                <div class="bg-gray-900 rounded-2xl overflow-hidden aspect-video relative">
+                    <div class="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                        <i class="fas fa-user text-4xl text-gray-600"></i>
+                    </div>
+                    <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                        You
+                    </div>
+                </div>
+                
+                <!-- Remote Video -->
+                <div class="bg-gray-900 rounded-2xl overflow-hidden aspect-video relative">
+                    <div class="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                        <i class="fas fa-user text-4xl text-gray-600"></i>
+                    </div>
+                    <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                        {{ other_user.get_full_name }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Call Controls -->
+            <div class="flex justify-center space-x-4">
+                <button class="w-12 h-12 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+                <button class="w-12 h-12 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="w-12 h-12 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="w-12 h-12 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                    <i class="fas fa-share"></i>
+                </button>
+            </div>
+            
+            <!-- Integration Instructions -->
+            <div class="mt-8 p-6 bg-blue-50 rounded-2xl">
+                <h3 class="font-semibold mb-2 flex items-center">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    How to connect with Google Meet
+                </h3>
+                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                    <li>Create a Google Meet session from <a href="https://meet.google.com/" class="text-blue-500 hover:underline" target="_blank">meet.google.com</a></li>
+                    <li>Share the meeting link with your partner through the messaging system</li>
+                    <li>Join the meeting at the scheduled time</li>
+                    <li>Use the screen sharing feature to share your screen for teaching</li>
+                </ol>
+            </div>
+            
+            <!-- Alternative Options -->
+            <div class="mt-6">
+                <h3 class="font-semibold mb-3">Other Communication Options</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="https://zoom.us/" target="_blank" class="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                        <i class="fab fa-zoom text-2xl text-blue-500 mb-2"></i>
+                        <p class="font-semibold">Zoom</p>
+                    </a>
+                    <a href="https://discord.com/" target="_blank" class="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                        <i class="fab fa-discord text-2xl text-indigo-500 mb-2"></i>
+                        <p class="font-semibold">Discord</p>
+                    </a>
+                    <a href="https://teams.microsoft.com/" target="_blank" class="p-4 bg-white border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                        <i class="fas fa-users text-2xl text-blue-600 mb-2"></i>
+                        <p class="font-semibold">Teams</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

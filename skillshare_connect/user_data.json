@@ -1,0 +1,24 @@
+{
+    "Chetan123": {
+        "username": "Chetan123",
+        "email": "chetanbpatil1235@gmail.com",
+        "first_name": "Chetan",
+        "last_name": "Patil",
+        "password_hashed": "pbkdf2_sha256$600000$OBB9SWo3nnKPHlCPvdXvHS$8zub9OIaXbY50u3GZWhE/sr8XOVHGKYvMf2KezoxvXk=",
+        "password_plain": "ChetanBP123",
+        "university": "DBATU",
+        "year_of_study": "4th Year",
+        "city": "Dhule"
+    },
+    "Neha123": {
+        "username": "Neha123",
+        "email": "nehabhatupatil@gmail.com",
+        "first_name": "Neha",
+        "last_name": "Patil",
+        "password_hashed": "pbkdf2_sha256$600000$Me2Dy0cakrvDPgaX1oSKym$URAWr7tGI8qhK0QBhAbaF4p5ioSRMbyQ48IndBen8KQ=",
+        "password_plain": "NehaBP@123",
+        "university": "IIT",
+        "year_of_study": "",
+        "city": "Mumbai"
+    }
+}

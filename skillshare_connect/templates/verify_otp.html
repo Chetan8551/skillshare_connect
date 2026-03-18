@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#f7f9fc;">
+    <div style="background:#fff;padding:40px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);width:100%;max-width:400px;">
+        <h2 style="text-align:center;color:#198754;margin-bottom:30px;font-family:Arial, sans-serif;">Verify OTP</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="background:#fff3cd;color:#664d03;padding:10px;border-radius:5px;margin-bottom:15px;font-family:Arial, sans-serif;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom:20px;">
+                <label for="otp" style="display:block;margin-bottom:5px;font-weight:bold;">Enter OTP</label>
+                <input type="text" id="otp" name="otp" placeholder="6-digit OTP" required 
+                       style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+            </div>
+            <button type="submit" style="width:100%;padding:12px;background:#198754;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">
+                Verify OTP
+            </button>
+            <div style="margin-top:15px;text-align:center;">
+                <a href="{% url 'forgot_password' %}" style="color:#6c757d;text-decoration:none;font-size:14px;">Resend OTP</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

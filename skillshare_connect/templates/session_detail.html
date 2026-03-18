@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Session Detail Page -->
+<div class="container mx-auto px-6 py-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <!-- Session Header -->
+            <div class="gradient-bg text-white p-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">{{ session.title }}</h1>
+                        <p class="text-xl opacity-90">
+                            {% if session.teacher == user %}
+                                Teaching {{ session.student.get_full_name }}
+                            {% else %}
+                                Learning from {{ session.teacher.get_full_name }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">
+                        {{ session.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="p-8">
+                <!-- Session Details -->
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Session Details</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-600">Skill</p>
+                                <p class="font-semibold">{{ session.skill.name }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-600">Date & Time</p>
+                                <p class="font-semibold">
+                                    {{ session.scheduled_time|date:"M d, Y" }} at {{ session.scheduled_time|time:"g:i A" }}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-600">Duration</p>
+                                <p class="font-semibold">{{ session.duration }} minutes</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm text-gray-600">Location</p>
+                                <p class="font-semibold">
+                                    {% if session.is_online %}
+                                        Online - 
+                                        {% if session.meeting_link %}
+                                            <a href="{{ session.meeting_link }}" target="_blank" class="text-blue-500 hover:underline">
+                                                Join Meeting
+                                            </a>
+                                        {% else %}
+                                            <span class="text-gray-500">No link provided</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {{ session.location|default:"Not specified" }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Participants</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
+                                <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
+                                    {{ session.teacher.first_name|first }}{{ session.teacher.last_name|first }}
+                                </div>
+                                <div class="ml-4">
+                                    <p class="font-semibold">{{ session.teacher.get_full_name }}</p>
+                                    <p class="text-sm text-gray-600">Teacher</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
+                                <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-teal-400 rounded-full flex items-center justify-center text-white font-bold">
+                                    {{ session.student.first_name|first }}{{ session.student.last_name|first }}
+                                </div>
+                                <div class="ml-4">
+                                    <p class="font-semibold">{{ session.student.get_full_name }}</p>
+                                    <p class="text-sm text-gray-600">Student</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Session Description -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Description</h2>
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <p class="text-gray-700">{{ session.description }}</p>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex space-x-4">
+                    {% if session.status == 'scheduled' %}
+                        {% if session.is_online and session.meeting_link %}
+                        <a href="{{ session.meeting_link }}" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition">
+                            Join Meeting
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'video_call' session.teacher.id %}" class="bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-teal-700 transition">
+                            Start Video Call
+                        </a>
+                        
+                        {% if session.student == user and not review %}
+                        <a href="{% url 'add_review' session.id %}" class="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-pink-700 transition">
+                            Add Review
+                        </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Review Section -->
+                {% if review %}
+                <div class="mt-8 p-6 bg-gray-50 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Session Review</h2>
+                    
+                    <div class="flex items-center mb-3">
+                        <div class="flex">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                {% else %}
+                                    <i class="far fa-star text-yellow-400"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="ml-2 text-gray-600">{{ review.rating }}/5</span>
+                    </div>
+                    
+                    <p class="text-gray-700">{{ review.comment }}</p>
+                    
+                    <p class="text-sm text-gray-500 mt-3">Reviewed by {{ review.reviewer.get_full_name }} on {{ review.created_at|date:"M d, Y" }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

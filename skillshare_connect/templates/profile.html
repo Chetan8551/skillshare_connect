@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- User Profile Page -->
+<div class="container mx-auto px-6 py-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <!-- Profile Header -->
+            <div class="gradient-bg text-white p-8">
+                <div class="flex items-center space-x-6">
+                    <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-3xl font-bold overflow-hidden">
+                        {% if profile_user.avatar %}
+                            <img src="{{ profile_user.avatar.url }}" alt="{{ profile_user.get_full_name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            {{ profile_user.first_name|first }}{{ profile_user.last_name|first }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">{{ profile_user.get_full_name|default:profile_user.username }}</h1>
+
+                        <!-- ✅ Show City -->
+                        {% if profile_user.city %}
+                            <p class="text-gray-600">
+                                <i class="fas fa-map-marker-alt text-red-500 mr-1"></i>{{ profile_user.city }}
+                            </p>
+                        {% endif %}
+
+                        <!-- ✅ University + Year -->
+                        <p class="text-xl opacity-90">
+                            {{ profile_user.university }}
+                            {% if profile_user.university and profile_user.year_of_study %} • {% endif %}
+                            {{ profile_user.year_of_study }}
+                        </p>
+
+                        <div class="flex items-center mt-2">
+                            <i class="fas fa-star text-yellow-300 mr-1"></i>
+                            <span class="text-lg">4.9 Rating</span>
+                            <span class="mx-2">•</span>
+                            <span class="text-lg">{{ connections_count }} Connections</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="p-8">
+                <!-- Edit Profile Button (only show if viewing own profile) -->
+                {% if profile_user == user %}
+                <div class="mb-6 text-right">
+                    <a href="{% url 'edit_profile' %}" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition">
+                        <i class="fas fa-edit mr-2"></i>Edit Profile
+                    </a>
+                </div>
+                {% endif %}
+                
+                <!-- Connection Status -->
+                {% if profile_user != user and connection_status %}
+                <div class="mb-6 p-4 rounded-xl 
+                    {% if connection_status == 'accepted' %}bg-green-100 text-green-800
+                    {% elif connection_status == 'pending' %}bg-yellow-100 text-yellow-800
+                    {% elif connection_status == 'rejected' %}bg-red-100 text-red-800
+                    {% endif %}">
+                    <div class="flex items-center">
+                        <i class="fas 
+                            {% if connection_status == 'accepted' %}fa-check-circle
+                            {% elif connection_status == 'pending' %}fa-clock
+                            {% elif connection_status == 'rejected' %}fa-times-circle
+                            {% endif %} mr-2"></i>
+                        <span>
+                            {% if connection_status == 'accepted' %}
+                                You are connected with {{ profile_user.get_full_name }}
+                            {% elif connection_status == 'pending' %}
+                                Connection request pending
+                            {% elif connection_status == 'rejected' %}
+                                Connection request was declined
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Bio Section -->
+                {% if profile_user.bio %}
+                <div class="mb-8 bg-gray-50 p-6 rounded-2xl">
+                    <h2 class="text-xl font-bold mb-3 text-gray-800">About Me</h2>
+                    <p class="text-gray-700">{{ profile_user.bio }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Can Teach Section -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                            <i class="fas fa-chalkboard-teacher text-green-500 mr-3"></i>
+                            Can Teach
+                        </h2>
+                        <div class="space-y-4">
+                            {% for skill in teach_skills %}
+                            <div class="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-code text-xl text-blue-600 mr-3"></i>
+                                    <div>
+                                        <h3 class="font-semibold text-lg">{{ skill.skill.name }}</h3>
+                                        <p class="text-gray-600">{{ skill.proficiency }}</p>
+                                    </div>
+                                </div>
+                                {% if skill.description %}
+                                <p class="text-gray-700">{{ skill.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                            <div class="bg-gray-100 p-6 rounded-2xl text-center">
+                                <p class="text-gray-500">No teaching skills added yet.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Wants to Learn Section -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                            <i class="fas fa-graduation-cap text-blue-500 mr-3"></i>
+                            Wants to Learn
+                        </h2>
+                        <div class="space-y-4">
+                            {% for skill in learn_skills %}
+                            <div class="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-2xl">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-brain text-xl text-orange-600 mr-3"></i>
+                                    <div>
+                                        <h3 class="font-semibold text-lg">{{ skill.skill.name }}</h3>
+                                        <p class="text-gray-600">{{ skill.proficiency }} level</p>
+                                    </div>
+                                </div>
+                                {% if skill.description %}
+                                <p class="text-gray-700">{{ skill.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                            <div class="bg-gray-100 p-6 rounded-2xl text-center">
+                                <p class="text-gray-500">No learning goals added yet.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (only show if viewing another user's profile) -->
+                {% if profile_user != user %}
+                <div class="mt-8 flex space-x-4">
+                    {% if profile_user != user and not connection_status or connection_status == 'rejected' %}
+                    <a href="{% url 'send_connection_request' profile_user.id %}" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 rounded-2xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transition text-center">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Connect Request
+                    </a>
+                    {% endif %}
+                                        
+                    {% if connection_status == 'accepted' %}
+                    <a href="{% url 'schedule_session' profile_user.id %}" class="flex-1 bg-gradient-to-r from-green-500 to-teal-600 text-white py-4 rounded-2xl font-semibold text-lg hover:from-green-600 hover:to-teal-700 transition text-center">
+                        <i class="fas fa-calendar-plus mr-2"></i>Schedule Session
+                    </a>
+
+                    <a href="{% url 'messages' %}" class="flex-1 border-2 border-gray-300 text-gray-700 py-4 rounded-2xl font-semibold text-lg hover:border-gray-400 transition text-center">
+                        <i class="fas fa-comment mr-2"></i>Send Message
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Availability -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-2xl">
+                    <h3 class="font-semibold text-lg mb-4">Availability</h3>
+                    <div class="grid grid-cols-7 gap-2 text-center">
+                        {% for day in availability %}
+                        <div class="py-2">
+                            <p class="text-sm font-medium">{{ day.get_day_of_week_display|slice:":3" }}</p>
+                            <p class="text-xs text-gray-600">{{ day.start_time|time:"g:i A" }} - {{ day.end_time|time:"g:i A" }}</p>
+                        </div>
+                        {% empty %}
+                        <div class="col-span-7 text-center py-4 text-gray-500">
+                            No availability set yet.
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

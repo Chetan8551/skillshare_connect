@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Dashboard -->
+<div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-bold mb-8 text-gray-800">Welcome back, {{ user.first_name }}!</h1>
+    
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Quick Stats -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-6 rounded-3xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100">Total Connections</p>
+                            <p class="text-3xl font-bold">{{ total_connections }}</p>
+                        </div>
+                        <i class="fas fa-users text-3xl text-blue-200"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-6 rounded-3xl" 
+                    style="background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100" style="color: rgba(255, 255, 255, 0.9) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Sessions This Week</p>
+                            <p class="text-3xl font-bold" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ sessions_this_week }}</p>
+                        </div>
+                        <i class="fas fa-calendar-check text-3xl text-green-200" style="color: rgba(255, 255, 255, 0.8) !important;"></i>
+                    </div>
+                </div>
+                
+                <!-- Replace the rating card with this version -->
+                <div class="bg-gradient-to-br from-orange-500 to-pink-600 text-white p-6 rounded-3xl" 
+                    style="background: linear-gradient(135deg, #ff8a00 0%, #f07575 100%);">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-orange-100" style="color: rgba(255, 255, 255, 0.9) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Rating</p>
+                            <p class="text-3xl font-bold" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ avg_rating }}</p>
+                        </div>
+                        <i class="fas fa-star text-3xl text-orange-200" style="color: rgba(255, 255, 255, 0.8) !important;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div class="bg-white rounded-3xl shadow-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Upcoming Sessions</h2>
+                    <a href="#" class="text-blue-500 hover:text-blue-700 font-semibold">View All</a>
+                </div>
+                
+                {% if upcoming_sessions %}
+                <div class="space-y-4">
+                    {% for session in upcoming_sessions %}
+                    <div class="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-r-2xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-semibold text-lg">{{ session.topic }}</h3>
+                                <p class="text-gray-600">
+                                    {{ session.scheduled_time|date:"M d, Y" }} • 
+                                    {{ session.scheduled_time|time:"g:i A" }} - 
+                                    {{ session.end_time|time:"g:i A" }}
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {% if session.teacher == user %}
+                                    Teaching {{ session.student.get_full_name }}
+                                    {% else %}
+                                    Learning from {{ session.teacher.get_full_name }}
+                                    {% endif %}
+                                </p>
+                                {% if session.skill %}
+                                <p class="text-sm text-gray-500 mt-1">Skill: {{ session.skill.name }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'session_detail' session.id %}" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-calendar-plus text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">No upcoming sessions scheduled.</p>
+                    <a href="{% url 'matches' %}" class="text-blue-500 hover:text-blue-700 font-semibold mt-2 inline-block">
+                        Find someone to connect with
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Completed Sessions -->
+            <div class="bg-white rounded-3xl shadow-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Completed Sessions</h2>
+                    <a href="#" class="text-blue-500 hover:text-blue-700 font-semibold">View All</a>
+                </div>
+                
+                {% if completed_sessions %}
+                <div class="space-y-4">
+                    {% for session in completed_sessions %}
+                    <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-r-2xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-semibold text-lg">{{ session.topic }}</h3>
+                                <p class="text-gray-600">
+                                    {{ session.scheduled_time|date:"M d, Y" }} • 
+                                    {{ session.scheduled_time|time:"g:i A" }} - 
+                                    {{ session.end_time|time:"g:i A" }}
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {% if session.teacher == user %}
+                                    You taught {{ session.student.get_full_name }}
+                                    {% else %}
+                                    You learned from {{ session.teacher.get_full_name }}
+                                    {% endif %}
+                                </p>
+                                {% if session.skill %}
+                                <p class="text-sm text-gray-500 mt-1">Skill: {{ session.skill.name }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'session_detail' session.id %}" class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition">
+                                    View
+                                </a>
+                                {% if session.student == user and not session.review %}
+                                <a href="{% url 'add_review' session.id %}" class="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition">
+                                    Review
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-check-circle text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">No completed sessions yet.</p>
+                </div>
+                {% endif %}
+            </div>
+
+
+            <!-- Recent Connection Requests -->
+            <div class="bg-white rounded-3xl shadow-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Connection Requests</h2>
+                    <a href="#" class="text-blue-500 hover:text-blue-700 font-semibold">View All</a>
+                </div>
+                
+                {% if pending_requests %}
+                <div class="space-y-4">
+                    {% for request in pending_requests %}
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
+                                {{ request.from_user.first_name|first }}{{ request.from_user.last_name|first }}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">{{ request.from_user.get_full_name }}</h3>
+                                <p class="text-gray-600 text-sm">
+                                    {% with teach_skills=request.from_user.skills.all %}
+                                    Can teach: 
+                                    {% for skill in teach_skills|slice:":2" %}
+                                        {{ skill.skill.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                </p>
+                                {% if request.message %}
+                                <p class="text-gray-500 text-sm mt-1">"{{ request.message|truncatewords:10 }}"</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <form method="POST" action="{% url 'respond_connection_request' request.id 'accept' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-green-500 hover:bg-green-100 p-2 rounded-full">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'respond_connection_request' request.id 'reject' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-500 hover:bg-red-100 p-2 rounded-full">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-user-friends text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">No pending connection requests.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar (AI + Quick Actions + Skills) -->
+        <div class="space-y-8">
+            <!-- AI Recommendations -->
+            <div class="bg-white rounded-3xl shadow-xl p-6 ai-glow">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot text-2xl text-blue-500 mr-3"></i>
+                        <h2 class="text-xl font-bold text-gray-800">AI Recommendations</h2>
+                    </div>
+                    <i class="fas fa-info-circle text-gray-400"></i>
+                </div>
+                
+                {% if ai_recommendations %}
+                <div class="space-y-4">
+                    {% for user in ai_recommendations %}
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+                        <div class="flex items-center mb-2">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                                {{ user.first_name|first }}{{ user.last_name|first }}
+                            </div>
+                            <div class="ml-3">
+                                <span class="font-semibold">{{ user.get_full_name }}</span>
+                                <p class="text-xs text-gray-600">{{ user.university }}</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">
+                            {% with teach_skills=user.skills.all %}
+                            Can teach: 
+                            {% for skill in teach_skills|slice:":2" %}
+                                {{ skill.skill.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                        </p>
+                        <a href="{% url 'profile_view' user.id %}" class="text-blue-500 text-sm font-semibold hover:underline">
+                            View Profile →
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-gray-500 text-sm">Complete your profile to get personalized recommendations</p>
+                    <a href="{% url 'edit_profile' %}" class="text-blue-500 text-sm font-semibold mt-2 inline-block">
+                        Edit Profile
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-3xl shadow-xl p-6">
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Quick Actions</h2>
+                <div class="space-y-3">
+                    <a href="{% url 'matches' %}" class="w-full flex items-center p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition">
+                        <i class="fas fa-search mr-3"></i>
+                        Find New Connections
+                    </a>
+                    
+                    <a href="{% url 'search' %}" class="w-full flex items-center p-3 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl hover:from-green-600 hover:to-teal-700 transition">
+                        <i class="fas fa-calendar-plus mr-3"></i>
+                        Schedule Session
+                    </a>
+                    
+                    <a href="{% url 'edit_profile' %}" class="w-full flex items-center p-3 bg-gradient-to-r from-orange-500 to-pink-600 text-white rounded-xl hover:from-orange-600 hover:to-pink-700 transition">
+                        <i class="fas fa-user-edit mr-3"></i>
+                        Update Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Your Skills -->
+            <div class="bg-white rounded-3xl shadow-xl p-6">
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Your Skills</h2>
+                <div class="flex flex-wrap gap-2">
+                    {% for skill in user.skills.all|slice:":6" %}
+                    <span class="skill-tag text-sm">{{ skill.skill.name }} ({{ skill.proficiency }})</span>
+                    {% empty %}
+                    <p class="text-gray-500 text-sm">No skills added yet.</p>
+                    {% endfor %}
+                </div>
+                {% if user.skills.count > 6 %}
+                <a href="{% url 'edit_profile' %}" class="text-blue-500 text-sm font-semibold mt-3 inline-block">
+                    View All Skills →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

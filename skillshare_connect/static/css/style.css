@@ -1,0 +1,403 @@
+/* ================== BASE STYLES ================== */
+* {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* ================== LIGHT THEME ================== */
+.light-theme {
+    --bg-primary: #f9fafb;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --accent-primary: #667eea;
+    --accent-secondary: #764ba2;
+    --border-color: #e5e7eb;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.light-theme body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.light-theme .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.light-theme .gradient-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.light-theme .nav-item.active {
+    color: #667eea;
+    border-bottom: 2px solid #e6e6e6;
+}
+
+.light-theme .skill-tag {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    color: white;
+}
+
+.light-theme .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.light-theme .rating-card {
+    background: linear-gradient(135deg, #ff8a00 0%, #e52e71 100%);
+    color: #fff;
+}
+
+.light-theme .card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    color: var(--text-primary);
+}
+
+.light-theme .input-field {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.light-theme .input-field:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* ✅ LIGHT THEME — NAVBAR VISIBILITY FIXES */
+.light-theme .navbar-section .nav-item,
+.light-theme .navbar-section .text-xl,
+.light-theme .navbar-section .text-xl.font-bold,
+.light-theme .navbar-section a span,
+.light-theme .navbar-section #theme-toggle {
+    color: #ffffff !important;
+}
+
+.light-theme .navbar-section #theme-toggle {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.light-theme .navbar-section .nav-item:hover,
+.light-theme .navbar-section .nav-item.active {
+    color: #ffab76 !important;
+    border-bottom-color: #ffab76 !important;
+}
+
+/* ================== DARK THEME ================== */
+.dark-theme {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2d2d2d;
+    /* ⬇️ Per your request, make key text black in dark theme */
+    --text-primary: #15e8ff;
+    --text-secondary: #000000;
+    --text-tertiary: #0ad2ff;
+    --accent-primary: #000000;
+    --accent-secondary: #a78bfa;
+    --border-color: #404040;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ✅ Make bold/heading-like text black in dark theme */
+.dark-theme b,
+.dark-theme strong,
+.dark-theme .font-bold {
+    color: #ffffff !important;
+}
+
+/* ================== EXISTING STYLES ================== */
+.dark-theme .gradient-bg {
+    background: linear-gradient(135deg, #4f46e5 0%, #7e22ce 100%);
+}
+
+.dark-theme .gradient-card {
+    background: linear-gradient(135deg, #c084fc 0%, #e11d48 100%);
+}
+
+/* ✅ DARK THEME — Navbar text black + overlay lightened so it stays readable */
+.dark-theme .navbar-section .nav-item,
+.dark-theme .navbar-section .text-xl,
+.dark-theme .navbar-section .text-xl.font-bold,
+.dark-theme .navbar-section a span,
+.dark-theme .navbar-section #theme-toggle {
+    color: #000000 !important;
+}
+
+.dark-theme .navbar-section #theme-toggle {
+    background: #ffffff;
+    border-color: #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Lighten the video overlay behind navbar so black text is visible */
+.dark-theme .navbar-section .nav-overlay {
+    background: rgba(118, 161, 205, 0.85);
+}
+
+.dark-theme .nav-item:hover {
+    color: #000000 !important;
+}
+
+.dark-theme .nav-item.active {
+    color: #000000 !important;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.dark-theme .skill-tag {
+    background: linear-gradient(45deg, #2563eb, #0891b2);
+    color: white;
+}
+
+.dark-theme .glass-effect {
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .rating-card {
+    background: linear-gradient(135deg, #ea580c 0%, #be185d 100%);
+    color: #fff;
+}
+
+.dark-theme .card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    color: var(--text-primary);
+}
+
+.dark-theme .input-field {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.dark-theme .input-field:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3);
+}
+
+.dark-theme .text-gray-700 {
+    color: var(--text-secondary);
+}
+
+.dark-theme .text-gray-600 {
+    color: var(--text-tertiary);
+}
+
+.dark-theme .bg-white {
+    background-color: var(--bg-secondary);
+}
+
+.dark-theme .bg-gray-100 {
+    background-color: var(--bg-tertiary);
+}
+
+.dark-theme .border-gray-200 {
+    border-color: var(--border-color);
+}
+
+/* ================== SHARED STYLES ================== */
+.gradient-bg {
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.gradient-card {
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ai-glow {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.6); }
+}
+
+.skill-tag {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 4px;
+    display: inline-block;
+}
+
+.glass-effect {
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.nav-item {
+    /* color removed from here; handled per-theme for proper contrast */
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.rating-card {
+    padding: 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.rating-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 20%);
+    pointer-events: none;
+}
+
+.rating-card .text-3xl {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.filters .btn.active {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.card {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    border-radius: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+}
+
+.theme-toggle,
+#theme-toggle {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* ================== HERO VIDEO BACKGROUND ================== */
+.hero-section {
+    position: relative;
+    height: 600px; /* adjust as needed */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;   /* ensures full coverage */
+    z-index: -1;
+}
+
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(21, 24, 40, 0.6); /* dark blue overlay for readability */
+    z-index: 0;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* keeps text above video */
+}
+
+/* ================== NAVBAR VIDEO BACKGROUND ================== */
+.navbar-section {
+    position: relative;
+    height: 70px; /* same as navbar height */
+    overflow: hidden;
+}
+
+#nav-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.nav-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 0;
+}
+
+/* Navbar items are themed for contrast */
+.light-theme .navbar-section .nav-item { color: #ffffff !important; }
+.dark-theme  .navbar-section .nav-item { color: #000000 !important; }
+
+/* Hover/active states per theme */
+.light-theme .navbar-section .nav-item:hover,
+.light-theme .navbar-section .nav-item.active { color: #ffab76 !important; }
+
+.dark-theme .navbar-section .nav-item:hover,
+.dark-theme .navbar-section .nav-item.active { color: #000000 !important; }
+
+/* (Fallback—if no theme class is present) */
+.nav-item:hover,
+.nav-item.active {
+    color: #ffab76; /* brand highlight color */
+}
+
+input.form-control {
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}

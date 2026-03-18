@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- AI Skill Match Page -->
+<div class="container mx-auto px-6 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">AI-Powered Skill Matching</h1>
+        <p class="text-xl text-gray-600">Discover perfect learning partners based on your skills and interests</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap gap-4">
+                <!-- All Matches -->
+                <a href="{% url 'matches' %}" 
+                   class="px-6 py-2 rounded-full font-semibold transition 
+                          {% if not filter %}btn-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %}">
+                    All Matches
+                </a>
+
+                <!-- Online Only -->
+                <a href="?filter=online" 
+                   class="px-6 py-2 rounded-full font-semibold transition 
+                          {% if filter == 'online' %}btn-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %}">
+                    Online Only
+                </a>
+
+                <!-- Nearby -->
+                <a href="?filter=nearby" 
+                   class="px-6 py-2 rounded-full font-semibold transition 
+                          {% if filter == 'nearby' %}btn-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %}">
+                    Nearby
+                </a>
+
+                <!-- Most Active -->
+                <a href="?filter=active" 
+                   class="px-6 py-2 rounded-full font-semibold transition 
+                          {% if filter == 'active' %}btn-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %}">
+                    Most Active
+                </a>
+            </div>
+
+            <!-- Sort dropdown -->
+            <div class="flex items-center space-x-4">
+                <form method="get">
+                    <select name="sort" onchange="this.form.submit()" 
+                            class="px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-blue-500">
+                        <option value="match" {% if not request.GET.sort or request.GET.sort == 'match' %}selected{% endif %}>Sort by Match %</option>
+                        <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Sort by Rating</option>
+                        <option value="distance" {% if request.GET.sort == 'distance' %}selected{% endif %}>Sort by Distance</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Match Results -->
+    <div class="space-y-6">
+        {% for match in matches %}
+        <div class="bg-white rounded-3xl shadow-xl p-8 {% if match.percentage >= 90 %}ai-glow{% endif %}">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-2">
+                    {% if match.percentage >= 90 %}
+                        <i class="fas fa-robot text-blue-500 text-xl"></i>
+                        <span class="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                            {{ match.percentage }}% Match
+                        </span>
+                        <span class="text-sm text-gray-500">AI Recommended</span>
+                    {% elif match.percentage >= 80 %}
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                            {{ match.percentage }}% Match
+                        </span>
+                    {% else %}
+                        <span class="bg-gradient-to-r from-purple-400 to-indigo-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                            {{ match.percentage }}% Match
+                        </span>
+                    {% endif %}
+                </div>
+
+                {% if match.online %}
+                    <span class="text-green-500 font-semibold">
+                        <i class="fas fa-circle text-xs mr-1"></i>Online Now
+                    </span>
+                {% else %}
+                    <span class="text-gray-500 text-sm">
+                        <i class="fas fa-circle text-xs mr-1"></i>Last seen {{ match.last_seen }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Left Content -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                            {{ match.initials }}
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-2xl font-bold">{{ match.name }}</h3>
+                            <p class="text-gray-600">{{ match.university }} • {{ match.major }} • {{ match.year }}</p>
+                            <div class="flex items-center mt-1">
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <span>{{ match.rating }} ({{ match.reviews }} reviews)</span>
+                                <span class="mx-2">•</span>
+                                <span class="text-green-600">{{ match.sessions }} successful sessions</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">
+                                <i class="fas fa-chalkboard-teacher text-green-500 mr-2"></i>Can Teach:
+                            </p>
+                            <div class="flex flex-wrap">
+                                {% for skill in match.can_teach %}
+                                    <span class="skill-tag">{{ skill }}</span>
+                                {% empty %}
+                                    <span class="text-gray-500">Not specified</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">
+                                <i class="fas fa-graduation-cap text-blue-500 mr-2"></i>Wants to Learn:
+                            </p>
+                            <div class="flex flex-wrap">
+                                {% for skill in match.wants_to_learn %}
+                                    <span class="skill-tag">{{ skill }}</span>
+                                {% empty %}
+                                    <span class="text-gray-500">Not specified</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if match.reason %}
+                    <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+                        <h4 class="font-semibold mb-2">Why this match?</h4>
+                        <p class="text-sm text-gray-700">{{ match.reason }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Right Content -->
+                <div class="space-y-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold {% if match.percentage >= 90 %}text-green-500{% elif match.percentage >= 80 %}text-orange-500{% else %}text-purple-500{% endif %} mb-1">
+                            {{ match.percentage }}%
+                        </div>
+                        <div class="text-sm text-gray-600">Compatibility</div>
+                    </div>
+
+                    {% if match.availability %}
+                    <div>
+                        <p class="text-sm text-gray-600 mb-2">Availability:</p>
+                        <div class="text-sm">
+                            {% for day, hours in match.availability.items %}
+                                <div class="flex justify-between">
+                                    <span>{{ day }}:</span>
+                                    <span class="text-green-600">{{ hours }}</span>
+                                </div>
+                            {% empty %}
+                                <span class="text-gray-500">Not provided</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="space-y-2">
+                        <!-- Connect button -->
+                        <form method="post" action="{% url 'send_connection_request' match.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full btn-blue py-3 rounded-2xl font-semibold hover:opacity-90 transition">
+                                Connect
+                            </button>
+                        </form>
+                        <!-- Profile button -->
+                        <a href="{% url 'profile' match.id %}">
+                            <button class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-2xl font-semibold hover:border-gray-400 transition">
+                                View Profile
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-gray-600">No matches found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-8">
+        <button class="btn-blue px-8 py-4 rounded-2xl font-semibold hover:opacity-90 transition">
+            Load More Matches
+        </button>
+    </div>
+</div>
+{% endblock %}

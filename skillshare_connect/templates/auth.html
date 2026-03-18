@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Login/Signup Page -->
+<div class="min-h-screen flex items-center justify-center py-12">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <i class="fas fa-graduation-cap text-3xl text-blue-500"></i>
+                    <span class="text-2xl font-bold text-gray-800">SkillShare Connect</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2" id="auth-title">Welcome Back</h2>
+                <p class="text-gray-600" id="auth-subtitle">Sign in to continue your learning journey</p>
+            </div>
+
+            <!-- Display Messages -->
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-3 rounded-xl {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Auth Toggle -->
+            <div class="flex bg-gray-100 rounded-2xl p-1 mb-8">
+                <button id="loginTab" class="flex-1 py-3 px-4 rounded-xl font-semibold transition bg-white text-blue-600 shadow-sm" onclick="switchAuth('login')">
+                    Sign In
+                </button>
+                <button id="signupTab" class="flex-1 py-3 px-4 rounded-xl font-semibold transition text-gray-600" onclick="switchAuth('signup')">
+                    Sign Up
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" method="POST" action="{% url 'auth' %}" class="space-y-6">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="login">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username or Email</label>
+                    <input type="text" name="username" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="your.username or email@example.com">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" name="password" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="Enter your password">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="remember_me" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                    <a href="{% url 'forgot_password' %}" class="text-sm text-blue-600 hover:underline">
+                        Forgot password?
+                    </a>
+
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" method="POST" action="{% url 'auth' %}" class="space-y-6 hidden">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="signup">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                        <input type="text" name="first_name" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                               placeholder="John">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                        <input type="text" name="last_name" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                               placeholder="Doe">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" name="username" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="johndoe">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" name="email" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="your.email@university.edu">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">University</label>
+                    <input type="text" name="university" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="Stanford University">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Year of Study</label>
+                    <select name="year_of_study" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition">
+                        <option value="">Select year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Graduate">Graduate</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_city" class="block text-gray-700 font-bold mb-2">City</label>
+                    <input type="text" name="city" id="id_city" 
+                        class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter your city" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" name="password1" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="Create a strong password">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                    <input type="password" name="password2" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 transition"
+                           placeholder="Confirm your password">
+                </div>
+                
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="terms" required class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-gray-600">I agree to the Terms of Service and Privacy Policy</span>
+                    </label>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-teal-700 transition">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="mt-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 space-y-3">
+                    <button class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                        <i class="fab fa-google text-red-500 mr-3"></i>
+                        <span class="font-medium text-gray-700">Continue with Google</span>
+                    </button>
+                    
+                    <button class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                        <i class="fab fa-github text-gray-800 mr-3"></i>
+                        <span class="font-medium text-gray-700">Continue with GitHub</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Feature Notice -->
+            <div class="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+                <div class="flex items-center">
+                    <i class="fas fa-robot text-blue-500 mr-3"></i>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">AI-Powered Matching</p>
+                        <p class="text-xs text-gray-600">Get personalized skill matches powered by advanced AI</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Enhanced Auth Form Toggle
+    function switchAuth(type) {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        
+        if (type === 'login') {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            loginTab.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            loginTab.classList.remove('text-gray-600');
+            signupTab.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            signupTab.classList.add('text-gray-600');
+            authTitle.textContent = 'Welcome Back';
+            authSubtitle.textContent = 'Sign in to continue your learning journey';
+        } else {
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            signupTab.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            signupTab.classList.remove('text-gray-600');
+            loginTab.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            loginTab.classList.add('text-gray-600');
+            authTitle.textContent = 'Create Account';
+            authSubtitle.textContent = 'Join our community of learners and teachers';
+        }
+    }
+
+    // Check if there are form errors to show the correct form
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('form') === 'signup') {
+            switchAuth('signup');
+        }
+    });
+</script>
+{% endblock %}
