@@ -41,7 +41,7 @@
                             <a class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
                             <a class="nav-item {% if request.resolver_match.url_name == 'matches' %}active{% endif %}" href="{% url 'matches' %}">AI Matches</a>
                             <a class="nav-item {% if request.resolver_match.url_name == 'search' %}active{% endif %}" href="{% url 'search' %}">Search</a>
-
+                             <a class="nav-item" href="{% url 'ai_interview' %}">🤖 AI Interviewer</a>
                             <!-- ✅ Messages with Badge -->
                             <div class="relative">
                                 <a class="nav-item {% if request.resolver_match.url_name == 'messages' %}active{% endif %}" 

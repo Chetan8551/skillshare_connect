@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Interviewer</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            font-family:'Inter',sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #111827,
+                    #1e293b
+                );
+
+            color:white;
+
+            min-height:100vh;
+
+            padding:30px;
+        }
+
+        .container{
+
+            max-width:1200px;
+
+            margin:auto;
+        }
+
+        .header{
+
+            margin-bottom:25px;
+        }
+
+        .title{
+
+            font-size:38px;
+
+            font-weight:700;
+
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+
+            color:#94a3b8;
+
+            font-size:16px;
+        }
+
+        .glass-card{
+
+            background:
+                rgba(255,255,255,0.06);
+
+            backdrop-filter:blur(14px);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius:24px;
+
+            padding:22px;
+
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.35);
+        }
+
+        .top-bar{
+
+            display:flex;
+
+            gap:16px;
+
+            margin-bottom:20px;
+
+            flex-wrap:wrap;
+        }
+
+        .input-box{
+
+            flex:1;
+        }
+
+        input[type="text"]{
+
+            width:100%;
+
+            padding:16px 18px;
+
+            border-radius:14px;
+
+            border:none;
+
+            outline:none;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-size:15px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            transition:0.3s;
+        }
+
+        input[type="text"]:focus{
+
+            border:
+                1px solid #6366f1;
+
+            box-shadow:
+                0 0 0 4px rgba(99,102,241,0.2);
+        }
+
+        input::placeholder{
+            color:#94a3b8;
+        }
+
+        button{
+
+            border:none;
+
+            outline:none;
+
+            cursor:pointer;
+
+            border-radius:14px;
+
+            padding:15px 22px;
+
+            font-size:15px;
+
+            font-weight:600;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+            transform:translateY(-2px);
+        }
+
+        .primary-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #4f46e5
+                );
+
+            color:white;
+        }
+
+        .secondary-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color:white;
+        }
+
+        .danger-btn{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ef4444,
+                    #dc2626
+                );
+
+            color:white;
+        }
+
+        .chat-box{
+
+            margin-top:20px;
+
+            height:560px;
+
+            overflow-y:auto;
+
+            padding-right:6px;
+        }
+
+        .chat-box::-webkit-scrollbar{
+            width:8px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb{
+
+            background:#334155;
+
+            border-radius:20px;
+        }
+
+        .message{
+
+            margin-bottom:18px;
+
+            padding:18px;
+
+            border-radius:18px;
+
+            line-height:1.7;
+
+            animation:fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translateY(10px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .interviewer{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(99,102,241,0.18),
+                    rgba(79,70,229,0.12)
+                );
+
+            border:
+                1px solid rgba(99,102,241,0.25);
+
+            color:#e2e8f0;
+        }
+
+        .candidate{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(16,185,129,0.15),
+                    rgba(5,150,105,0.12)
+                );
+
+            border:
+                1px solid rgba(16,185,129,0.22);
+
+            color:#ecfdf5;
+
+            margin-left:80px;
+        }
+
+        .feedback-block{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(245,158,11,0.14),
+                    rgba(217,119,6,0.10)
+                );
+
+            border:
+                1px solid rgba(245,158,11,0.25);
+
+            color:#fef3c7;
+        }
+
+        .thinking{
+
+            background:
+                rgba(255,255,255,0.05);
+
+            color:#cbd5e1;
+
+            font-style:italic;
+        }
+
+        .section-title{
+
+            font-size:13px;
+
+            font-weight:700;
+
+            letter-spacing:1px;
+
+            text-transform:uppercase;
+
+            margin-bottom:10px;
+
+            color:#cbd5e1;
+        }
+
+        .bottom-controls{
+
+            margin-top:18px;
+
+            display:flex;
+
+            gap:14px;
+
+            flex-wrap:wrap;
+
+            align-items:center;
+        }
+
+        .status-box{
+
+            color:#cbd5e1;
+
+            font-size:14px;
+        }
+
+        .answer-row{
+
+            display:flex;
+
+            gap:14px;
+
+            margin-top:18px;
+        }
+
+        .answer-row input{
+            flex:1;
+        }
+
+        .tip{
+
+            margin-top:16px;
+
+            color:#94a3b8;
+
+            font-size:14px;
+        }
+
+        .score-card{
+
+            margin-top:18px;
+
+            padding:16px;
+
+            border-radius:18px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            display:none;
+        }
+
+        .score-title{
+
+            font-size:18px;
+
+            font-weight:700;
+
+            margin-bottom:10px;
+        }
+
+        .score-value{
+
+            font-size:42px;
+
+            font-weight:700;
+
+            color:#818cf8;
+        }
+
+        .ended-banner{
+
+            margin-top:16px;
+
+            padding:16px;
+
+            border-radius:16px;
+
+            background:
+                rgba(239,68,68,0.15);
+
+            border:
+                1px solid rgba(239,68,68,0.25);
+
+            color:#fecaca;
+
+            font-weight:600;
+        }
+
+        @media(max-width:768px){
+
+            body{
+                padding:18px;
+            }
+
+            .title{
+                font-size:28px;
+            }
+
+            .top-bar,
+            .bottom-controls,
+            .answer-row{
+
+                flex-direction:column;
+            }
+
+            button{
+                width:100%;
+            }
+
+            .candidate{
+                margin-left:0;
+            }
+
+            .chat-box{
+                height:500px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="title">
+            AI Mock Interviewer
+        </div>
+
+        <div class="subtitle">
+            Professional voice-enabled realistic interview simulation
+        </div>
+
+    </div>
+
+    <div class="glass-card">
+
+        <div class="top-bar">
+
+            <div class="input-box">
+
+                <input
+                    type="text"
+                    id="roleInput"
+                    placeholder="Enter role e.g. Django Developer"
+                >
+
+            </div>
+
+            <button
+                class="primary-btn"
+                onclick="startInterview()"
+            >
+                Start Interview
+            </button>
+
+        </div>
+
+        <div class="tip">
+            Answer naturally. The interviewer adapts dynamically based on your performance and behavior.
+        </div>
+
+        <div
+            id="chatBox"
+            class="chat-box"
+        ></div>
+
+        <div class="bottom-controls">
+
+            <button
+                id="micBtn"
+                class="danger-btn"
+                onclick="startListening()"
+            >
+                🎤 Start Listening
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="speakLastQuestion()"
+            >
+                🔊 Repeat Question
+            </button>
+
+            <div
+                id="listeningStatus"
+                class="status-box"
+            >
+                Waiting to start interview...
+            </div>
+
+        </div>
+
+        <div class="answer-row">
+
+            <input
+                type="text"
+                id="answerInput"
+                placeholder="Type your answer here..."
+            >
+
+            <button
+                id="sendBtn"
+                class="primary-btn"
+                onclick="sendAnswer()"
+            >
+                Submit
+            </button>
+
+        </div>
+
+        <div
+            id="scoreCard"
+            class="score-card"
+        >
+
+            <div class="score-title">
+                Final Interview Score
+            </div>
+
+            <div
+                id="finalScore"
+                class="score-value"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let chatHistory = [];
+
+    let sessionId = null;
+
+    let lastQuestionText = "";
+
+    let recognition = null;
+
+    let isListening = false;
+
+    let interviewEnded = false;
+
+    const chatBox =
+        document.getElementById("chatBox");
+
+    const roleInput =
+        document.getElementById("roleInput");
+
+    const answerInput =
+        document.getElementById("answerInput");
+
+    const listeningStatus =
+        document.getElementById("listeningStatus");
+
+    function addMessage(text,type){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            `message ${type}`;
+
+        div.innerHTML =
+            text.replace(/\n/g,"<br>");
+
+        chatBox.appendChild(div);
+
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
+    }
+
+    function addThinking(){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "message thinking";
+
+        div.id = "thinkingBox";
+
+        div.innerText =
+            "Interviewer is thinking...";
+
+        chatBox.appendChild(div);
+
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
+    }
+
+    function removeThinking(){
+
+        const el =
+            document.getElementById("thinkingBox");
+
+        if(el) el.remove();
+    }
+
+    function speakText(text){
+
+        if(!("speechSynthesis" in window)) return;
+
+        window.speechSynthesis.cancel();
+
+        const utterance =
+            new SpeechSynthesisUtterance(text);
+
+        utterance.lang = "en-IN";
+
+        utterance.rate = 1;
+
+        const voices =
+            window.speechSynthesis.getVoices();
+
+        const preferredVoice =
+            voices.find(
+                v =>
+                v.lang &&
+                v.lang.toLowerCase().includes("en")
+            );
+
+        if(preferredVoice){
+            utterance.voice = preferredVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function renderConversation(
+        feedback,
+        nextQuestion
+    ){
+
+        let combined = "";
+
+        if(feedback && nextQuestion){
+
+            combined =
+                `${feedback}<br><br>${nextQuestion}`;
+
+        }else if(feedback){
+
+            combined = feedback;
+
+        }else{
+
+            combined = nextQuestion;
+        }
+
+        addMessage(
+            `<div class="section-title">Interviewer</div>${combined}`,
+            "interviewer"
+        );
+
+        lastQuestionText =
+            nextQuestion || feedback;
+
+        chatHistory.push({
+            sender:"interviewer",
+            text:combined
+        });
+
+        speakText(
+            combined.replace(/<br>/g," ")
+        );
+    }
+
+    function renderEvaluation(
+        feedback,
+        betterAnswer,
+        quality,
+        nextQuestion
+    ){
+
+        let badge = "Average";
+
+        if(quality === "strong"){
+            badge = "Strong";
+        }
+
+        if(quality === "weak"){
+            badge = "Weak";
+        }
+
+        let html = `
+            <div class="section-title">
+                Feedback (${badge})
+            </div>
+
+            ${feedback}
+        `;
+
+        if(
+            betterAnswer &&
+            betterAnswer.trim() !== ""
+        ){
+
+            html += `
+                <br><br>
+
+                <div class="section-title">
+                    Better Answer
+                </div>
+
+                ${betterAnswer}
+            `;
+        }
+
+        addMessage(
+            html,
+            "feedback-block"
+        );
+
+        if(nextQuestion){
+
+            addMessage(
+                `<div class="section-title">Interviewer</div>${nextQuestion}`,
+                "interviewer"
+            );
+
+            lastQuestionText =
+                nextQuestion;
+
+            chatHistory.push({
+                sender:"interviewer",
+                text:nextQuestion
+            });
+
+            speakText(
+                `${feedback}. ${nextQuestion}`
+            );
+        }
+    }
+
+    function renderEnd(feedback,score=0){
+
+        addMessage(
+            `
+            <div class="section-title">
+                Interview Completed
+            </div>
+
+            ${feedback}
+            `,
+            "feedback-block"
+        );
+
+        document.getElementById(
+            "scoreCard"
+        ).style.display = "block";
+
+        document.getElementById(
+            "finalScore"
+        ).innerText = score;
+
+        const banner =
+            document.createElement("div");
+
+        banner.className =
+            "ended-banner";
+
+        banner.innerText =
+            "Interview session ended successfully.";
+
+        chatBox.appendChild(banner);
+
+        speakText(
+            "The interview has ended."
+        );
+
+        interviewEnded = true;
+
+        answerInput.disabled = true;
+
+        document.getElementById(
+            "sendBtn"
+        ).disabled = true;
+
+        document.getElementById(
+            "micBtn"
+        ).disabled = true;
+    }
+
+    async function callInterviewAPI(message){
+
+        const role =
+            roleInput.value.trim() ||
+            "General Interview";
+
+        addThinking();
+
+        try{
+
+            const response =
+                await fetch(
+                    "/ai-interviewer/chat/",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                            "application/json"
+                        },
+
+                        body:JSON.stringify({
+
+                            session_id:sessionId,
+
+                            role:role,
+
+                            message:message,
+
+                            history:chatHistory
+                        })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            console.log("API:",data);
+
+            removeThinking();
+
+            if(data.session_id){
+                sessionId = data.session_id;
+            }
+
+            if(!data.success){
+
+                addMessage(
+                    `Error: ${data.error}`,
+                    "feedback-block"
+                );
+
+                return;
+            }
+
+            if(
+                data.should_end === true ||
+                data.reply_type === "end" ||
+                data.stage === "end"
+            ){
+
+                renderEnd(
+                    data.feedback ||
+                    "Interview ended.",
+                    data.score || 0
+                );
+
+                return;
+            }
+
+            if(
+                data.reply_type === "warning" ||
+                data.stage === "warning"
+            ){
+
+                addMessage(
+                    `
+                    <div class="section-title">
+                        Warning
+                    </div>
+
+                    ${data.feedback}
+                    `,
+                    "feedback-block"
+                );
+
+                return;
+            }
+
+            if(
+                data.reply_type === "conversation"
+            ){
+
+                renderConversation(
+                    data.feedback || "",
+                    data.next_question || ""
+                );
+
+            }else{
+
+                renderEvaluation(
+                    data.feedback || "",
+                    data.better_answer || "",
+                    data.answer_quality || "average",
+                    data.next_question || ""
+                );
+            }
+
+        }catch(error){
+
+            removeThinking();
+
+            addMessage(
+                `Error: ${error.message}`,
+                "feedback-block"
+            );
+        }
+    }
+
+    function startInterview(){
+
+        const role =
+            roleInput.value.trim();
+
+        if(!role){
+
+            alert(
+                "Please enter interview role."
+            );
+
+            return;
+        }
+
+        chatBox.innerHTML = "";
+
+        chatHistory = [];
+
+        sessionId = null;
+
+        interviewEnded = false;
+
+        answerInput.disabled = false;
+
+        document.getElementById(
+            "sendBtn"
+        ).disabled = false;
+
+        document.getElementById(
+            "micBtn"
+        ).disabled = false;
+
+        document.getElementById(
+            "scoreCard"
+        ).style.display = "none";
+
+        const intro =
+            "Hello! Welcome to the interview. To get started, what is your name?";
+
+        addMessage(
+            `<div class="section-title">Interviewer</div>${intro}`,
+            "interviewer"
+        );
+
+        chatHistory.push({
+            sender:"interviewer",
+            text:intro
+        });
+
+        lastQuestionText = intro;
+
+        speakText(intro);
+    }
+
+    async function sendAnswer(){
+
+        if(interviewEnded) return;
+
+        const answer =
+            answerInput.value.trim();
+
+        if(!answer) return;
+
+        addMessage(
+            `<div class="section-title">You</div>${answer}`,
+            "candidate"
+        );
+
+        chatHistory.push({
+            sender:"candidate",
+            text:answer
+        });
+
+        answerInput.value = "";
+
+        await callInterviewAPI(answer);
+    }
+
+    function speakLastQuestion(){
+
+        if(lastQuestionText){
+
+            speakText(lastQuestionText);
+        }
+    }
+
+    function setupRecognition(){
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        if(!SpeechRecognition){
+            return null;
+        }
+
+        const recog =
+            new SpeechRecognition();
+
+        recog.lang = "en-IN";
+
+        recog.continuous = false;
+
+        recog.interimResults = true;
+
+        recog.maxAlternatives = 1;
+
+        recog.onstart = function(){
+
+            isListening = true;
+
+            listeningStatus.innerText =
+                "Listening...";
+        };
+
+        recog.onresult = function(event){
+
+            let transcript = "";
+
+            for(
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ){
+
+                transcript +=
+                    event.results[i][0].transcript;
+            }
+
+            answerInput.value =
+                transcript;
+
+            listeningStatus.innerText =
+                "Speech captured.";
+        };
+
+        recog.onerror = function(event){
+
+            isListening = false;
+
+            listeningStatus.innerText =
+                "Mic error: " + event.error;
+        };
+
+        recog.onend = function(){
+
+            isListening = false;
+
+            if(
+                listeningStatus.innerText ===
+                "Listening..."
+            ){
+
+                listeningStatus.innerText =
+                    "Stopped listening.";
+            }
+        };
+
+        return recog;
+    }
+
+    function startListening(){
+
+        if(interviewEnded) return;
+
+        if(!recognition){
+
+            recognition =
+                setupRecognition();
+        }
+
+        if(!recognition){
+
+            alert(
+                "Use Chrome browser for speech recognition."
+            );
+
+            return;
+        }
+
+        try{
+
+            if(isListening){
+
+                recognition.stop();
+
+                isListening = false;
+
+                return;
+            }
+
+            answerInput.focus();
+
+            recognition.start();
+
+        }catch(error){
+
+            listeningStatus.innerText =
+                "Mic failed.";
+        }
+    }
+
+    window.speechSynthesis.onvoiceschanged =
+        () => {
+
+        window.speechSynthesis.getVoices();
+    };
+
+    answerInput.addEventListener(
+        "keydown",
+        function(e){
+
+            if(e.key === "Enter"){
+
+                sendAnswer();
+            }
+        }
+    );
+
+</script>
+
+</body>
+</html>
